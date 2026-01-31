@@ -695,7 +695,9 @@ public class ConcurrentArrayHashProblems {
                         currentStreak++;
                     }
                     
-                    longest.updateAndGet(current -> Math.max(current, currentStreak));
+                    // Store in final variable for lambda capture
+                    final int streakLength = currentStreak;
+                    longest.updateAndGet(current -> Math.max(current, streakLength));
                 }
             });
             
@@ -1318,14 +1320,15 @@ public class AlgorithmService {
         numSet.parallelStream().forEach(num -> {
             if (!numSet.contains(num - 1)) {
                 int currentNum = num;
-                int currentStreak = 1;
+                int streak = 1;
                 
                 while (numSet.contains(currentNum + 1)) {
                     currentNum++;
-                    currentStreak++;
+                    streak++;
                 }
                 
-                longest.updateAndGet(current -> Math.max(current, currentStreak));
+                final int finalStreak = streak; // Make it effectively final
+                longest.updateAndGet(current -> Math.max(current, finalStreak));
             }
         });
         
